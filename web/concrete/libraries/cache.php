@@ -21,7 +21,7 @@ class Cache {
 		return md5($type . $id);
 	}
 	
-	public function getLibrary() {
+	public static function getLibrary() {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
@@ -29,7 +29,7 @@ class Cache {
 				$frontendOptions = array(
 					'lifetime' => CACHE_LIFETIME,
 					'automatic_serialization' => true,
-					'cache_id_prefix' => CACHE_ID		
+					'cache_id_prefix' => CACHE_ID
 				);
 				$backendOptions = array(
 					'cache_dir' => DIR_FILES_CACHE,
@@ -60,7 +60,7 @@ class Cache {
 		return $cache;
 	}
 	
-	public function startup() {
+	public static function startup() {
 		$cache = Cache::getLibrary();
 	}
 	
@@ -84,11 +84,11 @@ class Cache {
 		CacheLocal::get()->enabled = true;
 	}
 	
-	/** 
+	/**
 	 * Inserts or updates an item to the cache
 	 * If $forceSet is true, we sidestep ENABLE_CACHE. This is for certain operations that
 	 * the cache must always be enabled for (getting remote data, etc..)
-	 */	
+	 */
 	public function set($type, $id, $obj, $expire = false) {
 		$loc = CacheLocal::get();
 		if ($loc->enabled) {
@@ -106,11 +106,11 @@ class Cache {
 		$cache->save($obj, Cache::key($type, $id), array($type), $expire);
 	}
 	
-	/** 
+	/**
 	 * Retrieves an item from the cache
 	 * If $forceGet is true, we sidestep ENABLE_CACHE. This is for certain operations that
 	 * the cache must always be enabled for (getting remote data, etc..)
-	 */	
+	 */
 	public function get($type, $id, $mustBeNewerThan = false, $forceGet = false) {
 		$loc = CacheLocal::get();
 		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
@@ -136,7 +136,7 @@ class Cache {
 		return $cache->load(Cache::key($type, $id));
 	}
 
-	/** 
+	/**
 	 * not used. Good idea but doesn't work with all cache layers and on large caches is VERY slow.
 
 	public function deleteType($type) {
@@ -147,9 +147,9 @@ class Cache {
 	
 	*/
 	
-	/** 
+	/**
 	 * Removes an item from the cache
-	 */	
+	 */
 	public function delete($type, $id){
 		$cache = Cache::getLibrary();
 		if ($cache) {
@@ -162,9 +162,9 @@ class Cache {
 		}
 	}
 	
-	/** 
+	/**
 	 * Completely flushes the cache
-	 */	
+	 */
 	public function flush() {
 		$cache = Cache::getLibrary();
 		if (!$cache) {
@@ -174,7 +174,7 @@ class Cache {
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		if (!ENABLE_CACHE) {
 			Cache::disableCache();
-		}		
+		}
 		return true;
 	}
 		

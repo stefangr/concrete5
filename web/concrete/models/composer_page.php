@@ -19,7 +19,7 @@ class ComposerPage extends Page {
 		$db = Loader::db();
 		$targetPageID = 0;
 		if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
-			$targetPageID = $ct->getCollectionTypeComposerPublishPageParentID();			
+			$targetPageID = $ct->getCollectionTypeComposerPublishPageParentID();
 		}
 		$db->Execute('insert into ComposerDrafts (cID, cpPublishParentID) values (?, ?)', array($p->getCollectionID(), $targetPageID));
 		$entry = ComposerPage::getByID($p->getCollectionID());
@@ -31,12 +31,12 @@ class ComposerPage extends Page {
 			$nb = $b2->duplicate($p);
 			$b2->deleteBlock();
 			$b2 = $nb;
-		}					
+		}
 		
-		return $entry;		
+		return $entry;
 	}
 	
-	/** 
+	/**
 	 * Checks to see if the page in question is a valid composer draft for the logged in user
 	 */
 	protected static function isValidComposerPage($entry) {
@@ -47,7 +47,7 @@ class ComposerPage extends Page {
 		$cp = new Permissions($entry);
 		if (!$cp->canWrite()) {
 			return false;
-		}			
+		}
 		return true;
 	}
 	
@@ -105,7 +105,7 @@ class ComposerPage extends Page {
 				$pages[] = $entry;
 			}
 		}
-		return $pages;		
+		return $pages;
 	}
 	
 	
@@ -124,7 +124,7 @@ class ComposerPage extends Page {
 		return $blocks;
 	}
 	
-	public static function getByID($cID, $cvID = 'RECENT') {
+	public static function getByID($cID, $cvID = 'RECENT', $class = 'Page') {
 		$db = Loader::db();
 		$c = parent::getByID($cID, $cvID, 'ComposerPage');
 

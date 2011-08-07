@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 class FileTypeList {
 	
-	public function getInstance() {
+	public static function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
 			$v = __CLASS__;
@@ -55,7 +55,7 @@ class FileTypeList {
 		$obj->akHandle = $akHandle;
 		$obj->akName = $akName;
 		$obj->akType = $akType;
-		$obj->akIsEditable = $akIsEditable;		
+		$obj->akIsEditable = $akIsEditable;
 		$this->importerAttributes[$akHandle] = $obj;
 	}
 	
@@ -64,12 +64,12 @@ class FileTypeList {
 		return $ftl->importerAttributes[$akHandle];
 	}
 		
-	/** 
+	/**
 	 * Can take an extension or a filename
 	 * Returns any registered information we have for the particular file type, based on its registration
 	 */
 	public static function getType($ext) {
-		$ftl = FileTypeList::getInstance();	
+		$ftl = FileTypeList::getInstance();
 		if (strpos($ext, '.') !== false) {
 			// filename
 			$h = Loader::helper('file');
@@ -110,7 +110,7 @@ class FileType {
 	public function getExtension() {return $this->extension;}
 	public function getCustomImporter() {return $this->customImporter;}
 	public function getGenericType() {return $this->type;}
-	public function getView() {return $this->view;}	
+	public function getView() {return $this->view;}
 	public function getEditor() { return $this->editor;}
 	
 	private function mapGenericTypeText($type) {
@@ -144,7 +144,7 @@ class FileType {
 		if ($type > 0) {
 			return FileType::mapGenericTypeText($type);
 		} else if (!empty($this->type)) {
-			return FileType::mapGenericTypeText($this->type);		
+			return FileType::mapGenericTypeText($this->type);
 		}
 	}
 	
@@ -160,7 +160,7 @@ class FileType {
 		return $cl;
 	}
 	
-	/** 
+	/**
 	 * Returns a thumbnail for this type of file
 	 */
 	public function getThumbnail($level, $fullImageTag = true) {

@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
-* including blocks, page metadata, page permissions. 
+* including blocks, page metadata, page permissions.
 * @package Pages
 *
 */
@@ -51,7 +51,7 @@ class Page extends Collection {
 		$c = new $class;
 		$c->populatePage($cID, $where, $version);
  
-		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
+		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page
 		if ($version > 0) {
 			$ca->set('page', $cID . ':' . $version, $c);
 		} else {
@@ -137,7 +137,7 @@ $ppWhere = '';
 		
 		unset($r);
 		
-	}		
+	}
 
 	/**
 	 * Returns 1 if the page is in edit mode
@@ -181,18 +181,18 @@ $ppWhere = '';
 	/**
 	 * Checks if the page is a dashboard page, returns true if it is
 	 * @return bool
-	 */	
+	 */
 	public function isAdminArea() {
 		if ($this->isGeneratedCollection()) {
 			$pos = strpos($this->getCollectionFilename(), "/" . DIRNAME_DASHBOARD);
 			return ($pos > -1);
-		}			
+		}
 		return false;
 	}
 	
-	/** 
+	/**
 	 * Takes an array of area/block values and makes that the arrangement for this page's version
-	 * Format is like: $area[10][0] = 2, $area[10][1] = 8, $area[15][0] = 27, with the area ID being the 
+	 * Format is like: $area[10][0] = 2, $area[10][1] = 8, $area[15][0] = 27, with the area ID being the
 	 * key and the block IDs being 1-n values inside it
 	 * @param array $areas
 	 */
@@ -242,7 +242,7 @@ $ppWhere = '';
 	/**
 	 * checks if the page is checked out, if it is return true
 	 * @return bool
-	 */	
+	 */
 	function isCheckedOut() {
 		// function to inform us as to whether the current collection is checked out
 		$db = Loader::db();
@@ -298,7 +298,7 @@ $ppWhere = '';
 	 * $pxml->group[0]['canRead'] = 1;
 	 * </code>
 	 * @param array $permissionsArray
-	 */	
+	 */
 	function assignPermissionSet($permissionsArray) {
 		$db = Loader::db();
 		// first, we make sure to set this collection's permission inheritance to override
@@ -322,7 +322,7 @@ $ppWhere = '';
 				$db->query($q, $v);
 			}
 			// ack - we need to copy area permissions from that page as well
-			// wait, i'm not sure if we need to do this anymore. 
+			// wait, i'm not sure if we need to do this anymore.
 			
 			$v = array($this->getPermissionsCollectionID());
 			$q = "select cID, arHandle, gID, uID, agPermissions from AreaGroups where cID = ?";
@@ -360,7 +360,7 @@ $ppWhere = '';
 		
 		$px = $permissionsArray;
 		
-		// this is too verbose but i don't know of a good place to stash a reusable function :-( 
+		// this is too verbose but i don't know of a good place to stash a reusable function :-(
 		
 		// not sure if we want to ALWAYS remove permissions for everything then stack the new ones
 		// or not, so for now i'm commenting out the selective removal and removing everything
@@ -399,7 +399,7 @@ $ppWhere = '';
 				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
 				$db->query($q, $v);
 			}
-		}		
+		}
 		if (isset($px->group)) {
 			foreach($px->group as $g) {
 				
@@ -483,7 +483,7 @@ $ppWhere = '';
 		$res = $db->execute($r, $v);
 		$newCID = $db->Insert_ID();
 
-		Loader::model('page_statistics');		
+		Loader::model('page_statistics');
 		PageStatistics::incrementParents($newCID);
 
 		
@@ -501,7 +501,7 @@ $ppWhere = '';
 	 * @param string $cName
 	 * @param string $cLink
 	 * @param bool $newWindow
-	 */	
+	 */
 	function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0) {
 		if ($this->cPointerExternalLink != '') {
 			$db = Loader::db();
@@ -523,7 +523,7 @@ $ppWhere = '';
 	 * @param string $cLink
 	 * @param bool $newWindow
 	 * @return int $newCID
-	 */	
+	 */
 	function addCollectionAliasExternal($cName, $cLink, $newWindow = 0) {
 
 		$db = Loader::db();
@@ -560,7 +560,7 @@ $ppWhere = '';
 		$res = $db->execute($r, $v);
 		$newCID = $db->Insert_ID();
 
-		Loader::model('page_statistics');		
+		Loader::model('page_statistics');
 		PageStatistics::incrementParents($newCID);
 
 		return $newCID;
@@ -570,19 +570,19 @@ $ppWhere = '';
 	/**
 	 * Check if a page is a single page that is in the core (/concrete directory)
 	 * @return bool
-	 */		
+	 */
 	public function isSystemPage() {
 		if ($this->isGeneratedCollection()) {
-			return (file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath()) || 
+			return (file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath()) ||
 			file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath() . '.php'));
-		}		
+		}
 		return false;
 	}
 
 	/**
 	 * Gets the icon for a page (also fires the on_page_get_icon event)
 	 * @return string $icon Path to the icon
-	 */		
+	 */
 	public function getCollectionIcon() {
 		// returns a fully qualified image link for this page's icon, either based on its collection type or if icon.png appears in its view directory
 		$icon = '';
@@ -621,7 +621,7 @@ $ppWhere = '';
 	/**
 	 * Remove an external link/alias
 	 * @return int $cIDRedir cID for the original page if the page was an alias
-	 */		
+	 */
 	function removeThisAlias() {
 		$cIDRedir = $this->getCollectionPointerID();
 		$cPointerExternalLink = $this->getCollectionPointerExternalLink();
@@ -633,7 +633,7 @@ $ppWhere = '';
 		} else if ($cIDRedir > 0) {
 			$db = Loader::db();
 
-			Loader::model('page_statistics');		
+			Loader::model('page_statistics');
 			PageStatistics::decrementParents($this->getCollectionPointerOriginalID());
 
 			$args = array($this->getCollectionPointerOriginalID());
@@ -660,14 +660,14 @@ $ppWhere = '';
 	/**
 	 * Returns the uID for a page that is checked out
 	 * @return int
-	 */	
+	 */
 	function getCollectionCheckedOutUserID() {
 		return $this->cCheckedOutUID;
 	}
 
 	/**
 	 * Gets the allowed sub pages for a page
-	 */	
+	 */
 	function getAllowedSubCollections() {
 		return $this->allowedSubCollections;
 	}
@@ -675,7 +675,7 @@ $ppWhere = '';
 	/**
 	 * Returns the path for the current page
 	 * @return string
-	 */	
+	 */
 	function getCollectionPath() {
 		return $this->cPath;
 	}
@@ -684,7 +684,7 @@ $ppWhere = '';
 	 * Returns the path for a page from its cID
 	 * @param int cID
 	 * @return string $path
-	 */	
+	 */
 	public static function getCollectionPathFromID($cID) {
 		$path = Cache::get('page_path', $cID);
 		if ($path != false) {
@@ -703,7 +703,7 @@ $ppWhere = '';
 	/**
 	 * Returns the uID for a page ownder
 	 * @return int
-	 */	
+	 */
 	function getCollectionUserID() {
 		return $this->uID;
 	}
@@ -711,7 +711,7 @@ $ppWhere = '';
 	/**
 	 * Returns the page's handle
 	 * @return string
-	 */	
+	 */
 	function getCollectionHandle() {
 		return $this->vObj->cvHandle;
 	}
@@ -719,7 +719,7 @@ $ppWhere = '';
 	/**
 	 * Returns the page's name
 	 * @return string
-	 */	
+	 */
 	function getCollectionTypeName() {
 		return $this->ctName;
 	}
@@ -727,7 +727,7 @@ $ppWhere = '';
 	/**
 	 * Returns the Collection Type ID
 	 * @return int
-	 */	
+	 */
 	function getCollectionTypeID() {
 		return $this->ctID;
 	}
@@ -735,7 +735,7 @@ $ppWhere = '';
 	/**
 	 * Returns the Collection Type handle
 	 * @return string
-	 */	
+	 */
 	function getCollectionTypeHandle() {
 		return $this->ctHandle;
 	}
@@ -743,21 +743,21 @@ $ppWhere = '';
 	/**
 	 * Returns theme id for the collection
 	 * @return int
-	 */	
+	 */
 	function getCollectionThemeID() {
 		if ($this->ptID < 1 && $this->cID != HOME_CID) {
 			$c = Page::getByID(HOME_CID);
 			return $c->getCollectionThemeID();
 		} else {
 			return $this->ptID;
-		}	
+		}
 	}
 	
 	/**
 	 * Check if a block is an alias from a page default
 	 * @param array $b
 	 * @return bool
-	 */	
+	 */
 	function isBlockAliasedFromMasterCollection(&$b) {
 		//Retrieve info for all of this page's blocks at once (and "cache" it)
 		// so we don't have to query the database separately for every block on the page.
@@ -775,20 +775,20 @@ $ppWhere = '';
 	/**
 	 * Returns Collection's theme object
 	 * @return PageTheme
-	 */		
+	 */
 	function getCollectionThemeObject() {
 		if ($this->ptID < 1) {
 			return PageTheme::getSiteTheme();
 		} else {
 			$pl = PageTheme::getByID($this->ptID);
 			return $pl;
-		}		
+		}
 	}
 
 	/**
 	 * Returns the page's name
 	 * @return string
-	 */		
+	 */
 	function getCollectionName() {
 		if (isset($this->vObj)) {
 			return $this->vObj->cvName;
@@ -799,7 +799,7 @@ $ppWhere = '';
 	/**
 	 * Returns the collection ID for the aliased page (returns 0 unless used on an actual alias)
 	 * @return int
-	 */	
+	 */
 	function getCollectionPointerID() {
 		return $this->cPointerID;
 	}
@@ -807,7 +807,7 @@ $ppWhere = '';
 	/**
 	 * Returns link for the aliased page
 	 * @return string
-	 */	
+	 */
 	function getCollectionPointerExternalLink() {
 		return $this->cPointerExternalLink;
 	}
@@ -815,7 +815,7 @@ $ppWhere = '';
 	/**
 	 * Returns if the alias opens in a new window
 	 * @return bool
-	 */	
+	 */
 	function openCollectionPointerExternalLinkInNewWindow() {
 		return $this->cPointerExternalLinkNewWindow;
 	}
@@ -823,7 +823,7 @@ $ppWhere = '';
 	/**
 	 * Checks to see if the page is an alias
 	 * @return bool
-	 */		
+	 */
 	function isAlias() {
 		return $this->cPointerID > 0 || $this->cPointerExternalLink != null;
 	}
@@ -831,7 +831,7 @@ $ppWhere = '';
 	/**
 	 * Checks if a page is an external link
 	 * @return bool
-	 */		
+	 */
 	function isExternalLink() {
 		return ($this->cPointerExternalLink != null);
 	}
@@ -839,7 +839,7 @@ $ppWhere = '';
 	/**
 	 * Get the original cID of a page
 	 * @return int
-	 */		
+	 */
 	function getCollectionPointerOriginalID()  {
 		return $this->cPointerOriginalID;
 	}
@@ -847,17 +847,17 @@ $ppWhere = '';
 	/**
 	 * Get the file name of a page (single pages)
 	 * @return string
-	 */	
+	 */
 	function getCollectionFilename() {
 		return $this->cFilename;
 	}
 	
 	/**
-	 * Gets the date a the current version was made public, 
+	 * Gets the date a the current version was made public,
 	 * if user is specified, returns in the current user's timezone
 	 * @param string $dateFormat
 	 * @param string $type (system || user)
-	 * @return string date formated like: 2009-01-01 00:00:00 
+	 * @return string date formated like: 2009-01-01 00:00:00
 	*/
 	function getCollectionDatePublic($dateFormat = null, $type='system') {
 		if(!$dateFormat) {
@@ -874,7 +874,7 @@ $ppWhere = '';
 	/**
 	 * Get the description of a page
 	 * @return string
-	 */	
+	 */
 	function getCollectionDescription() {
 		return $this->vObj->cvDescription;
 	}
@@ -882,7 +882,7 @@ $ppWhere = '';
 	/**
 	 * Gets the cID of the page's parent
 	 * @return int
-	 */	
+	 */
 	function getCollectionParentID() {
 		return $this->cParentID;
 	}
@@ -891,7 +891,7 @@ $ppWhere = '';
 	 * Get the Parent cID from a page by using a cID
 	 * @param int $cID
 	 * @return int
-	 */		
+	 */
 	function getCollectionParentIDFromChildID($cID) {
 		$cParentID = Cache::get('parent_id', $cID);
 		if ($cParentID == false) {
@@ -906,10 +906,10 @@ $ppWhere = '';
 	/**
 	 * Returns an array of this cParentID and aliased parentIDs
 	 * @return array $cID
-	 */		
+	 */
 	function getCollectionParentIDs(){
 		$cIDs=array($this->cParentID);
-		$db = Loader::db(); 
+		$db = Loader::db();
 		$aliasedParents=$db->getAll('SELECT cParentID FROM Pages WHERE cPointerID='.intval($this->cID).' ');
 		foreach($aliasedParents as $aliasedParent)
 			$cIDs[]=$aliasedParent['cParentID'];
@@ -919,7 +919,7 @@ $ppWhere = '';
 	/**
 	 * Checks if a page is a page default
 	 * @return bool
-	 */	
+	 */
 	function isMasterCollection() {
 		return $this->isMasterCollection;
 	}
@@ -927,7 +927,7 @@ $ppWhere = '';
 	/**
 	 * Gets the pending action for a page
 	 * @return string
-	 */	
+	 */
 	function getPendingAction() {
 		return $this->cPendingAction;
 	}
@@ -935,16 +935,16 @@ $ppWhere = '';
 	/**
 	 * Gets the uID of the user that intiated the pending action
 	 * @return int
-	 */	
+	 */
 	function getPendingActionUserID() {
 		return $this->cPendingActionUID;
 	}
 
 	/**
-	 * Gets the pending action date, 
+	 * Gets the pending action date,
 	 * if user is specified, returns in the current user's timezone
 	 * @param string $type (system || user)
-	 * @return string date formated like: 2009-01-01 00:00:00 
+	 * @return string date formated like: 2009-01-01 00:00:00
 	*/
 	function getPendingActionDateTime($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -953,12 +953,12 @@ $ppWhere = '';
 		} else {
 			return $this->cPendingActionDatetime;
 		}
-	}	
+	}
 
 	/**
 	 * Gets the cID of the target page (like for deleting)
 	 * @return int
-	 */		
+	 */
 	function getPendingActionTargetCollectionID() {
 		return $this->cPendingActionTargetCID;
 	}
@@ -966,7 +966,7 @@ $ppWhere = '';
 	/**
 	 * Checks if the pending action is move
 	 * @return bool
-	 */		
+	 */
 	function isPendingMove() {
 		return ($this->cPendingAction == 'MOVE');
 	}
@@ -974,7 +974,7 @@ $ppWhere = '';
 	/**
 	 * Checks if the pending action is copy
 	 * @return bool
-	 */	
+	 */
 	function isPendingCopy() {
 		return ($this->cPendingAction == 'COPY');
 	}
@@ -982,7 +982,7 @@ $ppWhere = '';
 	/**
 	 * Checks if the pending action is delete
 	 * @return bool
-	 */	
+	 */
 	function isPendingDelete() {
 		return ($this->cPendingAction == 'DELETE');
 	}
@@ -990,7 +990,7 @@ $ppWhere = '';
 	/**
 	 * Gets the template permissions
 	 * @return string
-	 */	
+	 */
 	function overrideTemplatePermissions() {
 		return $this->cOverrideTemplatePermissions;
 	}
@@ -998,7 +998,7 @@ $ppWhere = '';
 	/**
 	 * Gets the position of the page in the sitemap
 	 * @return int
-	 */		
+	 */
 	function getCollectionDisplayOrder() {
 		return $this->cDisplayOrder;
 	}
@@ -1006,7 +1006,7 @@ $ppWhere = '';
 	/**
 	 * Set the theme for a page using the page object
 	 * @param PageTheme $pl
-	 */		
+	 */
 	public function setTheme($pl) {
 		$db = Loader::db();
 		$db->query('update Pages set ptID = ? where cID = ?', array($pl->getThemeID(), $this->cID));
@@ -1015,7 +1015,7 @@ $ppWhere = '';
 
 	/**
 	 * Set the permissions of sub-collections added beneath this permissions to inherit from the template
-	 */		
+	 */
 	function setPermissionsInheritanceToTemplate() {
 		$db = Loader::db();
 		if ($this->cID) {
@@ -1025,7 +1025,7 @@ $ppWhere = '';
 
 	/**
 	 * Set the permissions of sub-collections added beneath this permissions to inherit from the parent
-	 */		
+	 */
 	function setPermissionsInheritanceToOverride() {
 		$db = Loader::db();
 		if ($this->cID) {
@@ -1084,7 +1084,7 @@ $ppWhere = '';
 		return 0;
 	}
 	
-	/** 
+	/**
 	 * Returns the first child of the current page, or null if there is no child
 	 * @param string $sortColumn
 	 * @return Page
@@ -1206,7 +1206,7 @@ $ppWhere = '';
 			$v = array($cName, $cHandle, $cDescription, $cDatePublic, $cvID, $this->cID);
 			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
-			$res = $db->execute($r, $v);				
+			$res = $db->execute($r, $v);
 		}
 
 		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
@@ -1500,7 +1500,10 @@ $ppWhere = '';
 		}
 	}
 
-	function duplicate($nc, $preserveUserID = false) {
+	function duplicate($nc = null, $preserveUserID = false) {
+		if (is_null($nc)) {
+			return;
+		}
 		$db = Loader::db();
 		// the passed collection is the parent collection
 		$cParentID = $nc->getCollectionID();
@@ -1508,9 +1511,9 @@ $ppWhere = '';
 		$u = new User();
 		$uID = $u->getUserID();
 		if ($preserveUserID) {
-			$uID = $this->getCollectionUserID();		
+			$uID = $this->getCollectionUserID();
 		}
-		$dh = Loader::helper('date');			
+		$dh = Loader::helper('date');
 		$cDate = $dh->getSystemDateTime();
 		
 		$cobj = parent::getByID($this->cID);
@@ -1658,9 +1661,9 @@ $ppWhere = '';
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				if ($row['cID'] > 0) {
-					$nc = Page::getByID($row['cID']);  
+					$nc = Page::getByID($row['cID']);
 					if( $nc->isAlias() )
-						 $nc->removeThisAlias(); 
+						 $nc->removeThisAlias();
 					else $nc->delete();
 				}
 			}
@@ -1780,7 +1783,7 @@ $ppWhere = '';
 		foreach($nodes as $do) {
 			$co = Page::getByID($do);
 			$co->updateDisplayOrder($displayOrder);
-			$displayOrder++;			
+			$displayOrder++;
 		}
 	}
 	
@@ -1793,7 +1796,7 @@ $ppWhere = '';
 		foreach($nodes as $do) {
 			$co = Page::getByID($do);
 			$co->updateDisplayOrder($displayOrder);
-			$displayOrder++;			
+			$displayOrder++;
 		}
 	}
 	
@@ -2149,7 +2152,7 @@ $ppWhere = '';
 		$data['uID'] = $uID;
 		$data['cID'] = HOME_CID;
 
-		$cobj = parent::add($data);		
+		$cobj = parent::add($data);
 		$cID = $cobj->getCollectionID();
 		
 		//$ctID = HOME_CTID;
@@ -2178,7 +2181,7 @@ $ppWhere = '';
 	* @return page
 	**/
 	
-	public function add($ct, $data) {
+	public function add($ct, $data = array()) {
 		$db = Loader::db();
 		$txt = Loader::helper('text');
 		
@@ -2215,11 +2218,11 @@ $ppWhere = '';
 		$data['handle'] = $handle;
 		$dh = Loader::helper('date');
 		$cDate = $dh->getSystemDateTime();
-		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
+		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
 		
 		parent::refreshCache();
-		$cobj = parent::add($data);		
-		$cID = $cobj->getCollectionID();		
+		$cobj = parent::add($data);
+		$cID = $cobj->getCollectionID();
 		$ctID = $ct->getCollectionTypeID();
 
 		$q = "select cID from Pages where ctID = '$ctID' and cIsTemplate = '1'";
@@ -2288,12 +2291,12 @@ $ppWhere = '';
 		if ($this->cCacheFullPageContentOverrideLifetime == 'default') {
 			$lifetime = CACHE_LIFETIME;
 		} else if ($this->cCacheFullPageContentOverrideLifetime == 'custom') {
-			$lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;		
+			$lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;
 		} else if ($this->cCacheFullPageContentOverrideLifetime == 'forever') {
 			$lifetime = 31536000; // 1 year
 		} else {
 			if (FULL_PAGE_CACHE_LIFETIME == 'custom') {
-				$lifetime = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM') * 60;		
+				$lifetime = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM') * 60;
 			} else if (FULL_PAGE_CACHE_LIFETIME == 'forever') {
 				$lifetime = 31536000; // 1 year
 			} else {
@@ -2331,7 +2334,7 @@ $ppWhere = '';
 					return false;
 				}
 			}
-		}		
+		}
 		
 		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL == 'all') {
 			// this cache page at the page level
@@ -2340,13 +2343,13 @@ $ppWhere = '';
 		}
 		
 		if (FULL_PAGE_CACHE_GLOBAL != 'blocks') {
-			// we are NOT specifically caching this page, and we don't 
+			// we are NOT specifically caching this page, and we don't
 			return false;
 		}
 		
 		if ($this->isGeneratedCollection()) {
 			return false;
-		}	
+		}
 
 		if (is_array($blocks)) {
 			foreach($blocks as $b) {
@@ -2378,7 +2381,7 @@ $ppWhere = '';
 		$data['uID'] = $uID;
 		
 		parent::refreshCache();
-		$cobj = parent::add($data);		
+		$cobj = parent::add($data);
 		$cID = $cobj->getCollectionID();
 		
 		$this->rescanChildrenDisplayOrder();
@@ -2423,7 +2426,7 @@ $ppWhere = '';
 	}
 
 	/*
-	 * returns an instance of the current page object 
+	 * returns an instance of the current page object
 	 *
 	*/
 	public static function getCurrentPage() {

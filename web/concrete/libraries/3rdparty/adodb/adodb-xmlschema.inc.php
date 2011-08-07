@@ -1,9 +1,9 @@
 <?php
 // Copyright (c) 2004 ars Cognita Inc., all rights reserved
 /* ******************************************************************************
-    Released under both BSD license and Lesser GPL library license. 
- 	Whenever there is any discrepancy between the two licenses, 
- 	the BSD license will take precedence. 
+    Released under both BSD license and Lesser GPL library license.
+ 	Whenever there is any discrepancy between the two licenses,
+ 	the BSD license will take precedence.
 *******************************************************************************/
 /**
  * xmlschema is a class that allows the user to quickly and easily
@@ -18,7 +18,7 @@
  * @tutorial getting_started.pkg
  */
  
-function _file_get_contents($file) 
+function _file_get_contents($file)
 {
  	if (function_exists('file_get_contents')) return file_get_contents($file);
 	
@@ -254,8 +254,8 @@ class dbTable extends dbObject {
 	}
 	
 	/**
-	* XML Callback to process start elements. Elements currently 
-	* processed are: INDEX, DROP, FIELD, KEY, NOTNULL, AUTOINCREMENT & DEFAULT. 
+	* XML Callback to process start elements. Elements currently
+	* processed are: INDEX, DROP, FIELD, KEY, NOTNULL, AUTOINCREMENT & DEFAULT.
 	*
 	* @access private
 	*/
@@ -384,7 +384,7 @@ class dbTable extends dbObject {
 	/**
 	* Adds a field to a table object
 	*
-	* $name is the name of the table to which the field should be added. 
+	* $name is the name of the table to which the field should be added.
 	* $type is an ADODB datadict field type. The following field types
 	* are supported as of ADODB 3.40:
 	* 	- C:  varchar
@@ -436,7 +436,7 @@ class dbTable extends dbObject {
 	/**
 	* Adds a field option to the current field specifier
 	*
-	* This method adds a field option allowed by the ADOdb datadict 
+	* This method adds a field option allowed by the ADOdb datadict
 	* and appends it to the given field.
 	*
 	* @param string $field	Field name
@@ -476,8 +476,12 @@ class dbTable extends dbObject {
 	* @param object $xmls adoSchema object
 	* @return array Array containing table creation SQL
 	*/
-	function create( &$xmls ) {
+	function create( &$xmls = null ) {
 		$sql = array();
+		
+		if (is_null($xmls)) {
+			return $sql;
+		}
 		
 		// drop any existing indexes
 		if( is_array( $legacy_indexes = $xmls->dict->MetaIndexes( $this->name ) ) ) {
@@ -531,7 +535,7 @@ class dbTable extends dbObject {
 				'SIZE' => $finfo['SIZE']
 			);
 			
-			// Loop through the options array and add the field options. 
+			// Loop through the options array and add the field options.
 			if( isset( $finfo['OPTS'] ) ) {
 				foreach( $finfo['OPTS'] as $opt ) {
 					// Option has an argument.
@@ -651,8 +655,8 @@ class dbIndex extends dbObject {
 	/**
 	* XML Callback to process start elements
 	*
-	* Processes XML opening tags. 
-	* Elements currently processed are: DROP, CLUSTERED, BITMAP, UNIQUE, FULLTEXT & HASH. 
+	* Processes XML opening tags.
+	* Elements currently processed are: DROP, CLUSTERED, BITMAP, UNIQUE, FULLTEXT & HASH.
 	*
 	* @access private
 	*/
@@ -741,7 +745,10 @@ class dbIndex extends dbObject {
 	* @param object $xmls adoSchema object
 	* @return array Array containing index creation SQL
 	*/
-	function create( &$xmls ) {
+	function create( &$xmls = null ) {
+		if (is_null($xmls)) {
+			return NULL;
+		}
 		if( $this->drop ) {
 			return NULL;
 		}
@@ -793,8 +800,8 @@ class dbData extends dbObject {
 	/**
 	* XML Callback to process start elements
 	*
-	* Processes XML opening tags. 
-	* Elements currently processed are: DROP, CLUSTERED, BITMAP, UNIQUE, FULLTEXT & HASH. 
+	* Processes XML opening tags.
+	* Elements currently processed are: DROP, CLUSTERED, BITMAP, UNIQUE, FULLTEXT & HASH.
 	*
 	* @access private
 	*/
@@ -1010,8 +1017,8 @@ class dbQuerySet extends dbObject {
 	}
 	
 	/**
-	* XML Callback to process start elements. Elements currently 
-	* processed are: QUERY. 
+	* XML Callback to process start elements. Elements currently
+	* processed are: QUERY.
 	*
 	* @access private
 	*/
@@ -1021,7 +1028,7 @@ class dbQuerySet extends dbObject {
 		switch( $this->currentElement ) {
 			case 'QUERY':
 				// Create a new query in a SQL queryset.
-				// Ignore this query set if a platform is specified and it's different than the 
+				// Ignore this query set if a platform is specified and it's different than the
 				// current connection platform.
 				if( !isset( $attributes['PLATFORM'] ) OR $this->supportedPlatform( $attributes['PLATFORM'] ) ) {
 					$this->newQuery();
@@ -1093,7 +1100,7 @@ class dbQuerySet extends dbObject {
 		return TRUE;
 	}
 	
-	/** 
+	/**
 	* Appends a line to a query that is being built line by line
 	*
 	* @param string $data Line of SQL data or NULL to initialize a new query
@@ -1204,7 +1211,7 @@ class dbQuerySet extends dbObject {
 
 /**
 * Loads and parses an XML file, creating an array of "ready-to-run" SQL statements
-* 
+*
 * This class is used to load and parse the XML file, to create an array of SQL statements
 * that can be used to build a database, and to build the database using the SQL array.
 *
@@ -1407,7 +1414,7 @@ class adoSchema {
 	* Loads an XML schema from a file and converts it to SQL.
 	*
 	* Call this method to load the specified schema (see the DTD for the proper format) from
-	* the filesystem and generate the SQL necessary to create the database described. 
+	* the filesystem and generate the SQL necessary to create the database described.
 	* @see ParseSchemaString()
 	*
 	* @param string $file Name of XML schema file.
@@ -1421,7 +1428,7 @@ class adoSchema {
 	/**
 	* Loads an XML schema from a file and converts it to SQL.
 	*
-	* Call this method to load the specified schema from a file (see the DTD for the proper format) 
+	* Call this method to load the specified schema from a file (see the DTD for the proper format)
 	* and generate the SQL necessary to create the database described by the schema.
 	*
 	* @param string $file Name of XML schema file.
@@ -1476,7 +1483,7 @@ class adoSchema {
 	* Converts an XML schema string to SQL.
 	*
 	* Call this method to parse a string containing an XML schema (see the DTD for the proper format)
-	* and generate the SQL necessary to create the database described by the schema. 
+	* and generate the SQL necessary to create the database described by the schema.
 	* @see ParseSchema()
 	*
 	* @param string $xmlstring XML schema string.
@@ -1534,7 +1541,7 @@ class adoSchema {
 	* Converts an XML schema string to uninstallation SQL.
 	*
 	* Call this method to parse a string containing an XML schema (see the DTD for the proper format)
-	* and generate the SQL necessary to uninstall the database described by the schema. 
+	* and generate the SQL necessary to uninstall the database described by the schema.
 	* @see RemoveSchema()
 	*
 	* @param string $schema XML schema string.
@@ -1554,8 +1561,8 @@ class adoSchema {
 	/**
 	* Applies the current XML schema to the database (post execution).
 	*
-	* Call this method to apply the current schema (generally created by calling 
-	* ParseSchema() or ParseSchemaString() ) to the database (creating the tables, indexes, 
+	* Call this method to apply the current schema (generally created by calling
+	* ParseSchema() or ParseSchemaString() ) to the database (creating the tables, indexes,
 	* and executing other SQL specified in the schema) after parsing.
 	* @see ParseSchema(), ParseSchemaString(), ExecuteInline()
 	*
@@ -1583,10 +1590,10 @@ class adoSchema {
 	}
 	
 	/**
-	* Returns the current SQL array. 
+	* Returns the current SQL array.
 	*
-	* Call this method to fetch the array of SQL queries resulting from 
-	* ParseSchema() or ParseSchemaString(). 
+	* Call this method to fetch the array of SQL queries resulting from
+	* ParseSchema() or ParseSchemaString().
 	*
 	* @param string $format Format: HTML, TEXT, or NONE (PHP array)
 	* @return array Array of SQL statements or FALSE if an error occurs
@@ -1603,7 +1610,7 @@ class adoSchema {
 	* parsed XML schema) to the filesystem.
 	*
 	* @param string $filename Path and name where the file should be saved.
-	* @return boolean TRUE if save is successful, else FALSE. 
+	* @return boolean TRUE if save is successful, else FALSE.
 	*/
 	function SaveSQL( $filename = './schema.sql' ) {
 		
@@ -1686,9 +1693,9 @@ class adoSchema {
 	* Converts an XML schema string to the specified DTD version.
 	*
 	* Call this method to convert a string containing an XML schema to a different AXMLS
-	* DTD version. For instance, to convert a schema created for an pre-1.0 version for 
-	* AXMLS (DTD version 0.1) to a newer version of the DTD (e.g. 0.2). If no DTD version 
-	* parameter is specified, the schema will be converted to the current DTD version. 
+	* DTD version. For instance, to convert a schema created for an pre-1.0 version for
+	* AXMLS (DTD version 0.1) to a newer version of the DTD (e.g. 0.2). If no DTD version
+	* parameter is specified, the schema will be converted to the current DTD version.
 	* If the newFile parameter is provided, the converted schema will be written to the specified
 	* file.
 	* @see ConvertSchemaFile()
@@ -1734,9 +1741,9 @@ class adoSchema {
 	* Converts an XML schema file to the specified DTD version.
 	*
 	* Call this method to convert the specified XML schema file to a different AXMLS
-	* DTD version. For instance, to convert a schema created for an pre-1.0 version for 
-	* AXMLS (DTD version 0.1) to a newer version of the DTD (e.g. 0.2). If no DTD version 
-	* parameter is specified, the schema will be converted to the current DTD version. 
+	* DTD version. For instance, to convert a schema created for an pre-1.0 version for
+	* AXMLS (DTD version 0.1) to a newer version of the DTD (e.g. 0.2). If no DTD version
+	* parameter is specified, the schema will be converted to the current DTD version.
 	* If the newFile parameter is provided, the converted schema will be written to the specified
 	* file.
 	* @see ConvertSchemaString()
@@ -1818,7 +1825,7 @@ class adoSchema {
 		xslt_set_error_handler ($xh, array (&$this, 'xslt_error_handler'));
 		
 		// process the schema
-		$result = xslt_process ($xh, 'arg:/_xml', 'arg:/_xsl', NULL, $arguments); 
+		$result = xslt_process ($xh, 'arg:/_xml', 'arg:/_xsl', NULL, $arguments);
 		
 		xslt_free ($xh);
 		
@@ -1930,7 +1937,7 @@ class adoSchema {
 	*
 	* Call this method to create an XML schema string from an existing database.
 	* If the data parameter is set to TRUE, AXMLS will include the data from the database
-	* in the schema. 
+	* in the schema.
 	*
 	* @param boolean $data Include data in schema dump
 	* @return string Generated XML schema
@@ -2035,7 +2042,7 @@ class adoSchema {
 	/**
 	* Sets a prefix for database objects
 	*
-	* Call this method to set a standard prefix that will be prepended to all database tables 
+	* Call this method to set a standard prefix that will be prepended to all database tables
 	* and indices when the schema is parsed. Calling setPrefix with no arguments clears the prefix.
 	*
 	* @param string $prefix Prefix that will be prepended.
@@ -2123,7 +2130,7 @@ class adoSchema {
 	* @return boolean TRUE if successful, else FALSE.
 	*
 	* @access private
-	*/	
+	*/
 	function addSQL( $sql = NULL ) {
 		if( is_array( $sql ) ) {
 			foreach( $sql as $line ) {
@@ -2163,7 +2170,7 @@ class adoSchema {
 	*
 	* @param string $format Format
 	* @return mixed SQL
-	*	
+	*
 	* @access private
 	*/
 	function getSQL( $format = NULL, $sqlArray = NULL ) {

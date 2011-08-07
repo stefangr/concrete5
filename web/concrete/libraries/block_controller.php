@@ -58,10 +58,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return void
 		 */
 		public function set($key, $value) {
-			BlockController::$sets[$this->identifier][$key] = $value;		
+			BlockController::$sets[$this->identifier][$key] = $value;
 		}
 		
-		public function get($key) {
+		public function get($key = null) {
 			if (isset(BlockController::$sets[$this->identifier][$key])) {
 				return BlockController::$sets[$this->identifier][$key];
 			}
@@ -69,11 +69,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return parent::get($key);
 		}
 
-		/** 
+		/**
 		 * @access private
 		 */
 		public function getSets() {
-			return BlockController::$sets[$this->identifier];		
+			return BlockController::$sets[$this->identifier];
 		}
 
 		/**
@@ -186,7 +186,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getCollectionObject() {
 			if ($this->bActionCID > 0) {
 				return Page::getByID($this->bActionCID);
-			} 
+			}
 			return Page::getCurrentPage();
 		}
 
@@ -203,7 +203,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					return $p[$field];
 				}
 				return $p;
-			}			
+			}
 			return parent::post($field);
 		}
 
@@ -220,7 +220,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		/** 
+		/**
 		 * Loads the BlockRecord class based on its attribute names
 		 * @return void
 		 */
@@ -246,7 +246,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$b = $obj;
 				$this->identifier = 'BLOCK_' . $obj->getBlockID();
 			
-				// we either have a blockID passed, or nothing passed, if we're adding a block type				
+				// we either have a blockID passed, or nothing passed, if we're adding a block type
 				$this->bID = $b->getBlockID();
 				if ($this->btTable) {
 					$this->record = new BlockRecord($this->btTable);
@@ -279,9 +279,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			parent::addHeaderItem($file);
 		}
 		
-		public function setupAndRun($method) {
+		public function setupAndRun($method = null) {
 			if ($method) {
 				$this->task = $method;
+			} else {
+				return;
 			}
 			if (method_exists($this, 'on_start')) {
 				call_user_func_array(array($this, 'on_start'), array($method));
@@ -374,7 +376,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->btIsInternal;
 		}
 		
-		/** 
+		/**
 		 * Returns a key/value array of strings that is used to translate items when used in javascript
 		 */
 		public function getJavaScriptStrings() {

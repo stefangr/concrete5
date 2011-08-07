@@ -2,14 +2,14 @@
 	
 	class Localization {
 	
-		public function init() {
+		public static function init() {
 			$loc = self::getInstance();
 			$loc->getTranslate();
 		}
 		
 		public static function getInstance() {
 			static $loc;
-			if (!isset($loc)) {			
+			if (!isset($loc)) {
 				$loc = new Localization();
 			}
 			return $loc;
@@ -90,7 +90,7 @@
 		
 		$arg = array();
 	    for($i = 1 ; $i < func_num_args(); $i++) {
-	        $arg[] = func_get_arg($i); 
+	        $arg[] = func_get_arg($i);
 	    }
 		if (is_object($zt)) {
 			return vsprintf($zt->_($text), $arg);

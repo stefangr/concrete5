@@ -20,10 +20,10 @@
  
  class Loader {
 		
-		/** 
+		/**
 		 * Loads a library file, either from the site's files or from Concrete's
 		 */
-		public function library($lib, $pkgHandle = null) {
+		public static function library($lib, $pkgHandle = null) {
 		
 			if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
 				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
@@ -35,7 +35,7 @@
 				return;
 			}
 			
-			if ($pkgHandle != null) {			
+			if ($pkgHandle != null) {
 				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_LIBRARIES . '/' . $lib . '.php');
 				return;
@@ -43,10 +43,10 @@
 			
 		}
 
-		/** 
+		/**
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
-		public function model($mod, $pkgHandle = null) {
+		public static function model($mod, $pkgHandle = null) {
 			
 			if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
 				require_once(DIR_MODELS . '/' . $mod . '.php');
@@ -86,7 +86,7 @@
 			}
 		}
 		
-		/** 
+		/**
 		 * @access private
 		 */
 		public function packageElement($file, $pkgHandle, $args = null) {
@@ -103,7 +103,7 @@
 			}
 		}
 
-		/** 
+		/**
 		 * Loads an element from C5 or the site
 		 */
 		public function element($file, $args = null) {
@@ -128,8 +128,8 @@
 			}
 		}
 
-		/** 
-		 * Loads a block's controller/class into memory. 
+		/**
+		 * Loads a block's controller/class into memory.
 		 * <code>
 		 * <?php Loader::block('autonav'); ?>
 		 * </code>
@@ -144,11 +144,11 @@
 				// this is last because it's kind of a performance drain to run all the time
 				// but that will be less of a problem when we cache the block types request
 				$bt = BlockType::getByHandle($bl);
-				if (is_object($bt)) { 
+				if (is_object($bt)) {
 					$pkg = $bt->getPackageHandle();
 					
 					if (file_exists(DIR_PACKAGES . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
-						require_once(DIR_PACKAGES . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);		
+						require_once(DIR_PACKAGES . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
 					} else if (file_exists(DIR_PACKAGES . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
 						require_once(DIR_PACKAGES_CORE . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
 					}
@@ -156,11 +156,11 @@
 			}
 		}
 		
-		/** 
+		/**
 		 * Loads the various files for the database abstraction layer. We would bundle these in with the db() method below but
-		 * these need to be loaded before the models which need to be loaded before db() 
+		 * these need to be loaded before the models which need to be loaded before db()
 		 */
-		public function database() {
+		public static function database() {
 			Loader::library('3rdparty/adodb/adodb.inc');
 			Loader::library('3rdparty/adodb/adodb-exceptions.inc');
 			Loader::library('3rdparty/adodb/adodb-active-record.inc');
@@ -168,7 +168,7 @@
 			Loader::library('database');
 		}
 		
-		/** 
+		/**
 		 * Returns the database object, or loads it if not yet created
 		 * <code>
 		 * <?php
@@ -179,7 +179,7 @@
 		public function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
 			static $_db;
 			if ((!isset($_db) || $create) && ($autoconnect)) {
-				if ($server == null && defined('DB_SERVER')) {	
+				if ($server == null && defined('DB_SERVER')) {
 					$dsn = DB_TYPE . '://' . DB_USERNAME . ':' . rawurlencode(DB_PASSWORD) . '@' . rawurlencode(DB_SERVER) . '/' . DB_DATABASE;
 				} else if ($server) {
 					$dsn = DB_TYPE . '://' . $username . ':' . rawurlencode($password) . '@' . rawurlencode($server) . '/' . $database;
@@ -218,13 +218,13 @@
 			return $_db;
 		}
 		
-		/** 
+		/**
 		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
 		 */
-		public function helper($file, $pkgHandle = false) {
+		public static function helper($file, $pkgHandle = false) {
 		
 			static $instances = array();
-			$class = false;		
+			$class = false;
 			
 			if ($pkgHandle != false) {
 				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
@@ -242,7 +242,7 @@
 					$class = Object::camelcase($file) . "Helper";
 				}
 			} else {
-				$class = Object::camelcase($file) . "Helper";					
+				$class = Object::camelcase($file) . "Helper";
 			}
 			
 			if (array_key_exists($class, $instances)) {
@@ -312,9 +312,9 @@
 			return $controller;
 		}
 		
-		/** 
+		/**
 		 * @access private
-		 */		
+		 */
 		public function dashboardModule($dbhHandle, $pkg = null) {
 			$controller = Loader::dashboardModuleController($dbhHandle, $pkg);
 			extract($controller->getSets());
@@ -337,7 +337,7 @@
 			}
 		}
 		
-		/** 
+		/**
 		 * Gets the path to a particular page type controller
 		 */
 		public function pageTypeControllerPath($ctHandle) {
@@ -363,7 +363,7 @@
 			
 			return $path;
 		}
-		/** 
+		/**
 		 * Loads a controller for either a page or view
 		 */
 		public function controller($item) {
@@ -390,7 +390,7 @@
 			
 			if ($item instanceof Page) {
 				$c = $item;
-				if ($c->getCollectionTypeID() > 0) {					
+				if ($c->getCollectionTypeID() > 0) {
 					$ctHandle = $c->getCollectionTypeHandle();
 					$path = Loader::pageTypeControllerPath($ctHandle, $item->getPackageHandle());
 					if ($path != false) {

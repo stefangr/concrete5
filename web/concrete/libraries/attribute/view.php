@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected function getValue() {return $this->attributeValue;}
 		protected function getAttributeKey() {return $this->attributeKey;}
 		
-		public function action($action) {
+		public function action($action, $task = null) {
 			$uh = Loader::helper('concrete/urls');
 			$a = func_get_args();
 			$args = '';
@@ -60,7 +60,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->attributeType = $attributeType;
 		}
 		
-		/** 
+		/**
 		 * Renders a particular view for an attribute
 		 */
 		public function render($view, $return = false) {
@@ -75,10 +75,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$css = $this->attributeType->getAttributeTypeFileURL($view . '.css');
 
 			$html = Loader::helper('html');
-			if ($js != false) { 
+			if ($js != false) {
 				$this->controller->addHeaderItem($html->javascript($js));
 			}
-			if ($css != false) { 
+			if ($css != false) {
 				$this->controller->addHeaderItem($html->css($css));
 			}
 
@@ -119,6 +119,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$contents = ob_get_contents();
 				ob_end_clean();
 				return $contents;
-			}			
-		}		
+			}
+		}
 	}

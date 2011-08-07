@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Contains the config class.
- * @package Utilities 
+ * @package Utilities
  * @author Andrew Embler <andrew@concrete5.org>
  * @category Concrete
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
@@ -33,12 +33,20 @@ class ConfigValue extends Object {
 class Config extends Object {
 	
 	private $props = array();
+	
+	/**
+	 * @deprecated
+	 */
 	private $pkg = false;
 	
+	/**
+	 * @deprecated
+	 */
 	public function setPackageObject($pkg) {
 		$this->pkg = $pkg;
 	}
-	public function get($cfKey, $getFullObject = false) {
+	
+	public static function get($cfKey, $getFullObject = false, $pkgID = '') {
 		static $instance;
 		if (!isset($instance)) {
 			$v = __CLASS__;
@@ -46,10 +54,10 @@ class Config extends Object {
 		}
 
 		$ca = new Cache();
-		$pkgID = '';
-		if (isset($this) && is_object($this->pkg)) {
-			$pkgID = $this->pkg->getPackageID();
-		}
+//		$pkgID = '';
+//		if (isset($this) && is_object($this->pkg)) {
+//			$pkgID = $this->pkg->getPackageID();
+//		}
 		
 		$cv = $ca->get('config_option' . $pkgID, $cfKey);
 		
@@ -81,7 +89,7 @@ class Config extends Object {
 			$cv->key = $cfKey;
 			$cv->timestamp = $timestamp;
 
-			$ca->set('config_option' . $pkgID, $cfKey, $cv);		
+			$ca->set('config_option' . $pkgID, $cfKey, $cv);
 		}
 
 		if (!$getFullObject) {
@@ -102,9 +110,9 @@ class Config extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 	
-	public function getOrDefine($key, $defaultValue) {
+	public static function getOrDefine($key, $defaultValue) {
 		$val = Config::get($key);
 		if ($val == null) {
 			$val = $defaultValue;
@@ -112,11 +120,12 @@ class Config extends Object {
 		define($key, $val);
 	}
 	
-	public function clear($cfKey) {
+	public static function clear($cfKey, $pkgID = '') {
 		$db = Loader::db();
-		$pkgID = '';
-		if (isset($this) && is_object($this->pkg)) {
-			$pkgID = $this->pkg->getPackageID();
+//		$pkgID = '';
+//		if (isset($this) && is_object($this->pkg)) {
+		if (! empty($pkgID)) {
+//			$pkgID = $this->pkg->getPackageID();
 			$db->query("delete from Config where cfKey = ? and pkgID = ?", array($cfKey, $pkgID));
 		} else {
 			$db->query("delete from Config where cfKey = ?", array($cfKey));
@@ -124,11 +133,12 @@ class Config extends Object {
 		Cache::delete('config_option' . $pkgID, $cfKey);
 	}
 	
-	public function save($cfKey, $cfValue) {
+	public static function save($cfKey, $cfValue, $pkgID = '') {
 		$db = Loader::db();
-		$pkgID = '';
-		if (isset($this) && is_object($this->pkg)) {
-			$pkgID = $this->pkg->getPackageID();
+//		$pkgID = '';
+//		if (isset($this) && is_object($this->pkg)) {
+		if (! empty($pkgID)) {
+//			$pkgID = $this->pkg->getPackageID();
 			$db->query("replace into Config (cfKey, cfValue, pkgID) values (?, ?, ?)", array($cfKey, $cfValue, $pkgID));
 		} else {
 			$db->query("replace into Config (cfKey, cfValue) values (?, ?)", array($cfKey, $cfValue));

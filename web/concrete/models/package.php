@@ -114,10 +114,10 @@ class Package extends Object {
 	public function getPackageHandle() {return $this->pkgHandle;}
 	
 	/**
-	 * Gets the date the package was added to the system, 
+	 * Gets the date the package was added to the system,
 	 * if user is specified, returns in the current user's timezone
 	 * @param string $type (system || user)
-	 * @return string date formated like: 2009-01-01 00:00:00 
+	 * @return string date formated like: 2009-01-01 00:00:00
 	*/
 	function getPackageDateInstalled($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -161,14 +161,14 @@ class Package extends Object {
 		$db = Loader::db();
 
 		// this sucks - but adodb generates errors at the beginning because it attempts
-		// to find a table that doesn't exist! 
+		// to find a table that doesn't exist!
 		
 		$handler = $db->IgnoreErrors();
 		if ($db->getDebug() == false) {
 			ob_start();
 		}
 		
-		$schema = $db->getADOSChema();		
+		$schema = $db->getADOSChema();
 		$sql = $schema->ParseSchema($xmlFile);
 		
 		$db->IgnoreErrors($handler);
@@ -214,7 +214,7 @@ class Package extends Object {
 		}
 	}
 	
-	/** 
+	/**
 	 * Returns an array of package items (e.g. blocks, themes)
 	 */
 	public function getPackageItems() {
@@ -233,11 +233,11 @@ class Package extends Object {
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
-		$tp = new TaskPermissionList();		
+		$tp = new TaskPermissionList();
 		$items['task_permissions'] = $tp->populatePackagePermissions($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
-		$items['attribute_types'] = AttributeType::getListByPackage($this);		
-		$items['jobs'] = Job::getListByPackage($this);		
+		$items['attribute_types'] = AttributeType::getListByPackage($this);
+		$items['jobs'] = Job::getListByPackage($this);
 		ksort($items);
 		return $items;
 	}
@@ -253,7 +253,7 @@ class Package extends Object {
 		} else if ($item instanceof CollectionType) {
 			return $item->getCollectionTypeName();
 		} else if ($item instanceof MailImporter) {
-			return $item->getMailImporterName();		
+			return $item->getMailImporterName();
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
@@ -271,17 +271,17 @@ class Package extends Object {
 		} else if ($item instanceof DashboardHomepage) {
 			return t('%s (%s)', $item->dbhDisplayName, $txt->unhandle($item->dbhModule));
 		} else if (is_a($item, 'TaskPermission')) {
-			return $item->getTaskPermissionName();			
+			return $item->getTaskPermissionName();
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		}
 	}
 
-	/** 
+	/**
 	 * Uninstalls the package. Removes any blocks, themes, or pages associated with the package.
 	 */
 	public function uninstall() {
-		$db = Loader::db();		
+		$db = Loader::db();
 		
 		$items = $this->getPackageItems();
 
@@ -294,10 +294,10 @@ class Package extends Object {
 				} else {
 					switch(get_class($item)) {
 						case 'BlockType':
-							$item->delete();	
+							$item->delete();
 							break;
 						case 'PageTheme':
-							$item->uninstall();	
+							$item->uninstall();
 							break;
 						case 'SinglePage':
 							@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
@@ -309,9 +309,7 @@ class Package extends Object {
 							$item->delete();
 							break;
 						case 'ConfigValue':
-							$co = new Config();
-							$co->setPackageObject($this);
-							$co->clear($item->key);
+							Config::clear($item->key, $this->getPackageID());
 							break;
 						case 'DashboardHomepage':
 							$item->Delete();
@@ -478,7 +476,7 @@ class Package extends Object {
 	}
 	
 	public function upgrade() {
-		Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);		
+		Package::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
 		// now we refresh all blocks
 		$items = $this->getPackageItems();
 		if (is_array($items['block_types'])) {
@@ -505,7 +503,7 @@ class Package extends Object {
 		return $pkgArray;
 	}
 	
-	/** 
+	/**
 	 * Returns an array of packages that have newer versions in the local packages directory
 	 * than those which are in the Packages table. This means they're ready to be upgraded
 	 */
@@ -515,14 +513,14 @@ class Package extends Object {
 		$db = Loader::db();
 		foreach($packages as $p) {
 			$row = $db->GetRow("select pkgID, pkgVersion from Packages where pkgHandle = ? and pkgIsInstalled = 1", array($p->getPackageHandle()));
-			if ($row['pkgID'] > 0) { 
+			if ($row['pkgID'] > 0) {
 				if (version_compare($p->getPackageVersion(), $row['pkgVersion'], '>')) {
 					$p->pkgCurrentVersion = $row['pkgVersion'];
 					$upgradeables[] = $p;
-				}		
+				}
 			}
 		}
-		return $upgradeables;		
+		return $upgradeables;
 	}
 
 	public static function getRemotelyUpgradeablePackages() {
@@ -534,8 +532,8 @@ class Package extends Object {
 				$upgradeables[] = $p;
 			}
 		}
-		return $upgradeables;		
-	}	
+		return $upgradeables;
+	}
 	
 	public function backup() {
 		// you can only backup root level packages.
@@ -550,21 +548,15 @@ class Package extends Object {
 
 
 	public function config($cfKey, $getFullObject = false) {
-		$co = new Config();
-		$co->setPackageObject($this);
-		return $co->get($cfKey, $getFullObject);
+		return Config::get($cfKey, $getFullObject, $this->getPackageID());
 	}
 	
 	public function saveConfig($cfKey, $value) {
-		$co = new Config();
-		$co->setPackageObject($this);
-		return $co->save($cfKey, $value);
+		return Config::save($cfKey, $value, $this->getPackageID());
 	}
 
 	public function clearConfig($cfKey) {
-		$co = new Config();
-		$co->setPackageObject($this);
-		return $co->clear($cfKey);
+		return Config::clear($cfKey, $this->getPackageID());
 	}
 	
 	public static function getAvailablePackages($filterInstalled = true) {

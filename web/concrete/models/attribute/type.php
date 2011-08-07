@@ -55,7 +55,7 @@ class AttributeType extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 	
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
@@ -110,7 +110,7 @@ class AttributeType extends Object {
 	public function render($view, $ak = false, $value = false, $return = false) {
 		// local scope
 		Loader::library('attribute/view');
-		$av = new AttributeTypeView($this, $ak, $value);	
+		$av = new AttributeTypeView($this, $ak, $value);
 		$resp = $av->render($view, $return);
 		if ($return) {
 			return $resp;
@@ -122,14 +122,14 @@ class AttributeType extends Object {
 		if ($this->getPackageID() > 0) {
 			$db = Loader::db();
 			$h = $this->getPackageHandle();
-			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
+			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL;
 			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
 		} else if (file_exists(DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff)) {
 			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
 		} else if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff)) {
 			$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
 		} else {
-			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default' . $ff;		
+			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default' . $ff;
 		}
 		return $url;
 	}
@@ -188,7 +188,7 @@ class AttributeType extends Object {
 		}
 	}
 	
-	protected function loadController() { 
+	protected function loadController() {
 		// local scope
 		$atHandle = $this->atHandle;
 		$txt = Loader::helper('text');
@@ -208,7 +208,7 @@ class AttributeType extends Object {
 
 class PendingAttributeType extends AttributeType {
 
-	public static function getList() {
+	public static function getList($akCategoryHandle = false) {
 		$db = Loader::db();
 		$atHandles = $db->GetCol("select atHandle from AttributeTypes");
 		

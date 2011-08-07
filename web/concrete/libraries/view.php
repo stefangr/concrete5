@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public $controller;
 		
 		
-		/** 
+		/**
 		 * An array of items that get loaded into a page's header
 		 */
 		private $headerItems = array();
@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 	     * @var array
 		*/
-		private $themePaths = array();	
+		private $themePaths = array();
 	
 		private $areLinksDisabled = false;
 		
@@ -50,22 +50,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * editing mode is enabled or not
 		 * @access private
 	     * @var boolean
-		*/	
+		*/
 		private $isEditingEnabled = true;
 		
 		// getInstance() grabs one instance of the view w/the singleton pattern
-		public function getInstance() {
+		public static function getInstance() {
 			static $instance;
 			if (!isset($instance)) {
 				$v = __CLASS__;
 				$instance = new $v;
 			}
 			return $instance;
-		}		
+		}
 		
 		
 		/**
-		 * This grabs the theme for a particular path, if one exists in the themePaths array 
+		 * This grabs the theme for a particular path, if one exists in the themePaths array
 		 * @access private
 	     * @param string $path
 		 * @return string $theme
@@ -83,7 +83,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $theme;
 		}
 		
-		/** 
+		/**
 		 * Returns a stylesheet found in a themes directory - but FIRST passes it through the tools CSS handler
 		 * in order to make certain style attributes found inside editable
 		 * @param string $stylesheet
@@ -96,7 +96,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		/** 
+		/**
 		 * Function responsible for adding header items within the context of a view.
 		 * @access private
 		 */
@@ -120,7 +120,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $items;
 		}
 		
-		/** 
+		/**
 		 * Function responsible for outputting header items
 		 * @access private
 		 */
@@ -167,7 +167,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 								}
 								print $html->css(trim($src, ',')) . "\n";
 							}
-							break;					
+							break;
 					}
 				}
 			} else {
@@ -188,42 +188,42 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		
-		/** 
+		/**
 		 * @access private
 		 */
 		public function enablePreview() {
 			$this->isPreview = true;
 		}
 		
-		/** 
+		/**
 		 * @access private
 		 */
 		public function isPreview() {
 			return $this->isPreview;
 		}
 		
-		/** 
+		/**
 		 * @access private
 		 */
 		public function disableLinks() {
 			$this->areLinksDisabled = true;
 		}
 		
-		/** 
+		/**
 		 * @access private
 		 */
 		public function enableLinks() {
 			$this->areLinksDisabled = false;
 		}
 		
-		/** 
+		/**
 		 * @access private
 		 */
 		public function areLinksDisabled() {
 			return $this->areLinksDisabled;
 		}
 		
-		/** 
+		/**
 		 * Returns the path used to access this view
 		 * @return string $viewPath
 		 */
@@ -231,13 +231,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->viewPath;
 		}
 		
-		/** 
+		/**
 		 * Returns the handle of the currently active theme
 		 */
 		public function getThemeHandle() { return $this->ptHandle;}
 		
 		/**
-		 * gets the theme include file for this particular view		
+		 * gets the theme include file for this particular view
 		 * @access public
 		 * @return string $theme
 		*/
@@ -340,7 +340,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * editing is enabled true | false
 		 * @access private
 		 * @return boolean
-		*/		
+		*/
 		public function editingEnabled() {
 			return $this->isEditingEnabled;
 		}
@@ -386,7 +386,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access public
 		 * @param string $url
 		 * @return boolean | void
-		*/	
+		*/
 		public function section($url) {
 			if (is_object($this->c)) {
 				$cPath = $this->c->getCollectionPath();
@@ -398,12 +398,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		
 		/**
-		 * url is a utility function that is used inside a view to setup urls w/tasks and parameters		
+		 * url is a utility function that is used inside a view to setup urls w/tasks and parameters
 		 * @access public
 		 * @param string $action
 		 * @param string $task
 		 * @return string $url
-		*/	
+		*/
 		public function url($action, $task = null) {
 			$dispatcher = '';
 			if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
@@ -426,7 +426,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if (ENABLE_LEGACY_CONTROLLER_URLS) {
 					$_action .= '-/' . $task;
 				} else {
-					$_action .= $task;			
+					$_action .= $task;
 				}
 				$args = func_get_args();
 				if (count($args) > 2) {
@@ -444,7 +444,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/**
-		 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of 
+		 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of
 		 * @param string $action
 		 * @param string $task
 		 * @return string $url
@@ -463,15 +463,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param string $title
 		 * @param string $error
 		 * @return void
-		*/	
+		*/
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
-			$titleContent = $title; 
+			$titleContent = $title;
 			if (!isset($this->theme) || (!$this->theme) || (!file_exists($this->theme))) {
 				$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
-				include($this->theme);	
+				include($this->theme);
 			} else {
-				Loader::element('error_fatal', array('innerContent' => $innerContent, 
+				Loader::element('error_fatal', array('innerContent' => $innerContent,
 					'titleContent' => $titleContent));
 			}
 		}
@@ -482,7 +482,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access public
 		 * @param string $theme
 		 * @return void
-		*/	
+		*/
 		public function setTheme($theme) {
 			$this->themeOverride = $theme;
 		}
@@ -491,15 +491,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * set theme takes either a text-based theme ("concrete" or "dashboard" or something)
 		 * or a PageTheme object and sets information in the view about that theme. This is called internally
 		 * and is always passed the correct item based on context
-		 * 
+		 *
 		 * @access public
 		 * @param PageTheme object $pl
 		 * @param string $filename
 		 * @param boolean $wrapTemplateInTheme
 		 * @return void
-		*/	
+		*/
 		private function setThemeForView($pl, $filename, $wrapTemplateInTheme = false) {
-			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through 
+			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through
 			$pkgID = 0;
 			if ($pl instanceof PageTheme) {
 				$this->ptHandle = $pl->getThemeHandle();
@@ -580,10 +580,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param string $view
 		 * @param array $args
 		 * @return void
-		*/	
-		public function render($view, $args = null) { 
+		*/
+		public function render($view, $args = null) {
 			
-			try {			
+			try {
 				if (is_array($args)) {
 					extract($args);
 				}
@@ -612,7 +612,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// Determine which inner item to load, load it, and stick it in $innerContent
 				$content = false;
 								
-				ob_start();			
+				ob_start();
 				if ($view instanceof Page) {
 					
 					$viewPath = $view->getCollectionPath();
@@ -669,7 +669,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					
 				} else if (is_string($view)) {
 					
-					// if we're passing a view but our render override is not null, that means that we're passing 
+					// if we're passing a view but our render override is not null, that means that we're passing
 					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
 					
 					// In order to enable editable 404 pages, other editable pages that we render without actually visiting
@@ -686,7 +686,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$this->viewPath = $this->getCollectionObject()->getCollectionPath();
 					}
 					
-					// we're just passing something like "/login" or whatever. This will typically just be 
+					// we're just passing something like "/login" or whatever. This will typically just be
 					// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
 					if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
 						$content = DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW;
@@ -721,14 +721,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$theme = $tmpTheme;
 				} else {
 					$theme = FILENAME_COLLECTION_DEFAULT_THEME;
-				}		
+				}
 				
 				$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
 
 				// Now, if we're on an actual page, we retrieve all the blocks on the page
 				// and store their view states in the local cache (for the page). That way
 				// we can add header items and have them show up in the header BEFORE
-				// the block itself is actually loaded 			
+				// the block itself is actually loaded
 				
 				if ($view instanceof Page) {
 					$_pageBlocks = $view->getBlocks();
@@ -747,7 +747,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					
 					// do we have any custom menu plugins?
 					$cp = new Permissions($view);
-					if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+					if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) {
 						$ih = Loader::helper('concrete/interface/menu');
 						$_interfaceItems = $ih->getPageHeaderMenuItems();
 						foreach($_interfaceItems as $_im) {
@@ -765,7 +765,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					
 					// now, we output all the custom style records for the design tab in blocks/areas on the page
 					$c = $this->getCollectionObject();
-					$view->outputCustomStyleHeaderItems(); 				
+					$view->outputCustomStyleHeaderItems();
 				}
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
@@ -827,7 +827,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} catch(ADODB_Exception $e) {
 				// if it's a database exception we go here.
 				if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
-					$this->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
+					$this->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);
 				} else {
 					$this->renderError(t('An unexpected error occurred.'), t('A database error occurred while processing this request.'), $e);
 				}

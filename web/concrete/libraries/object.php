@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 *
 * @package Utilities
 * The object class is extended by most objects in Concrete, but is mostly internal
-* @access private 
+* @access private
 *
 */
 	class Object {
@@ -38,11 +38,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
-		public function camelcase($file) {
+		public static function camelcase($file) {
 			// turns "asset_library" into "AssetLibrary"
 			$r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $file));
 			$r2 = str_replace(' ', '', $r1);
-			return $r2;		
+			return $r2;
 		}
 
 	

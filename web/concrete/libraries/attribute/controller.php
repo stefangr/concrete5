@@ -67,7 +67,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					return $p[$field];
 				}
 				return $p;
-			}			
+			}
 			return parent::post($field);
 		}
 
@@ -94,11 +94,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->searchIndexFieldDefinition;
 		}
 		
-		public function setupAndRun($method) {
+		public function setupAndRun($method = null) {
 			$args = func_get_args();
 			$args = array_slice($args, 1);
 			if ($method) {
 				$this->task = $method;
+			} else {
+				return;
 			}
 			if (method_exists($this, 'on_start')) {
 				call_user_func_array(array($this, 'on_start'), array($method));
@@ -129,7 +131,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/* Automatically run when an attribute key is added or updated
 		* @return ValidationError
-		*/		
+		*/
 		public function validateKey($args = false) {
 			if ($args == false) {
 				$args =  $this->post();
@@ -167,7 +169,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$error->add('Invalid attribute category.');
 			}
 			
-			return $error;			
+			return $error;
 		}
 		
 	}

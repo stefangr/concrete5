@@ -12,18 +12,18 @@ class DatabaseItemList extends ItemList {
 	protected $debug = false;
 	protected $filters = array();
 	protected $sortByString = '';
-	protected $groupByString = '';  
-	protected $havingString = '';  
+	protected $groupByString = '';
+	protected $havingString = '';
 	protected $autoSortColumns = array();
 	protected $userPostQuery = '';
 	
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
-			$arr = $this->executeBase(); // returns an associated array of query/placeholder values				
+			$arr = $this->executeBase(); // returns an associated array of query/placeholder values
 			$r = $db->Execute($arr);
 			$this->total = $r->NumRows();
-		}		
+		}
 		return $this->total;
 	}
 	
@@ -84,7 +84,7 @@ class DatabaseItemList extends ItemList {
 					} else {
 						$q .= 'and 1 = 2';
 					}
-				} else { 
+				} else {
 					$comp = (is_null($value) && stripos($comp, 'is') === false) ? (($comp == '!=' || $comp == '<>') ? 'IS NOT' : 'IS') : $comp;
 					$q .= 'and ' . $column . ' ' . $comp . ' ' . $db->quote($value) . ' ';
 				}
@@ -97,11 +97,11 @@ class DatabaseItemList extends ItemList {
 		
 		if ($this->groupByString != '') {
 			$q .= 'group by ' . $this->groupByString . ' ';
-		}		
+		}
 
 		if ($this->havingString != '') {
 			$q .= 'having ' . $this->havingString . ' ';
-		}		
+		}
 		
 		return $q;
 	}
@@ -124,7 +124,7 @@ class DatabaseItemList extends ItemList {
 		}
 	}
 	
-	/** 
+	/**
 	 * Returns an array of whatever objects extends this class (e.g. PageList returns a list of pages).
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
@@ -136,18 +136,18 @@ class DatabaseItemList extends ItemList {
 		
 		if ($this->sortByString != '') {
 			$q .= 'order by ' . $this->sortByString . ' ';
-		}	
+		}
 		if ($this->itemsPerPage > 0 && (intval($itemsToGet) || intval($offset)) ) {
 			$q .= 'limit ' . $offset . ',' . $itemsToGet . ' ';
 		}
 		
 		$db = Loader::db();
-		if ($this->debug) { 
+		if ($this->debug) {
 			$db->setDebug(true);
 		}
-		//echo $q.'<br>'; 
+		//echo $q.'<br>';
 		$resp = $db->GetAll($q);
-		if ($this->debug) { 
+		if ($this->debug) {
 			$db->setDebug(false);
 		}
 		
@@ -155,7 +155,7 @@ class DatabaseItemList extends ItemList {
 		return $resp;
 	}
 	
-	/** 
+	/**
 	 * Adds a filter to this item list
 	 */
 	public function filter($column, $value, $comparison = '=') {
@@ -169,7 +169,7 @@ class DatabaseItemList extends ItemList {
 		return parent::getSearchResultsClass($field);
 	}
 
-	public function sortBy($key, $dir) {
+	public function sortBy($key, $dir = 'asc') {
 		if ($key instanceof AttributeKey) {
 			$key = 'ak_' . $key->getAttributeKeyHandle();
 		}
@@ -181,7 +181,7 @@ class DatabaseItemList extends ItemList {
 			$key = 'ak_' . $key->getAttributeKeyHandle();
 		}
 		$this->groupByString = $key;
-	}	
+	}
 
 	public function having($column, $value, $comparison = '=') {
 		if ($column == false) {
@@ -217,7 +217,7 @@ class DatabaseItemList extends ItemList {
 
 }
 
-/** 
+/**
  * A base class for working with lists of objects. Implements things like pagination & offset, getting the total, and iteration
  * @package Utilities
  */
@@ -275,7 +275,7 @@ class ItemList {
 			
 			foreach($_REQUEST as $key => $value) {
 				$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
-			}		
+			}
 			return $_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'];
 		} else {
 			return $_REQUEST;
@@ -297,10 +297,10 @@ class ItemList {
 	public function setNameSpace($ns) {
 		$this->queryStringPagingVariable .= '_' . $ns;
 		$this->queryStringSortVariable .= '_' . $ns;
-		$this->queryStringSortDirectionVariable .= '_' . $ns;		
-	}	
+		$this->queryStringSortDirectionVariable .= '_' . $ns;
+	}
 	
-	/** 
+	/**
 	 * Returns the total number of items found by this list
 	 */
 	public function getTotal() {
@@ -310,7 +310,7 @@ class ItemList {
 		return $this->total;
 	}
 	
-	/** 
+	/**
 	 * Returns an array of object by "page"
 	 */
 	public function getPage($page = false) {
@@ -336,7 +336,7 @@ class ItemList {
 		}
 	}
 
-	/** 
+	/**
 	 * Displays summary text about a list
 	 */
 	public function displaySummary( $right_content = '' ) {
@@ -354,7 +354,7 @@ class ItemList {
 	
 	public function getSearchResultsClass($field) {
 		$class = '';
-		if ($this->isActiveSortColumn($field)) {	
+		if ($this->isActiveSortColumn($field)) {
 			$class = 'ccm-results-list-active-sort-';
 			if ($this->getActiveSortDirection() == 'desc') {
 				$class .= 'desc';
@@ -363,7 +363,7 @@ class ItemList {
 			}
 		}
 		return $class;
-	}	
+	}
 
 	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		$uh = Loader::helper('url');
@@ -414,7 +414,7 @@ class ItemList {
 		return $pagination;
 	}
 	
-	/** 
+	/**
 	 * Gets standard HTML to display paging */
 	public function displayPaging($script = false, $return = false, $additionalVars = array()) {
 		$summary = $this->getSummary();
@@ -435,7 +435,7 @@ class ItemList {
 			}
 		}
 	}
-	/** 
+	/**
 	 * Returns an object with properties useful for paging
 	 */
 	public function getSummary() {
@@ -464,26 +464,26 @@ class ItemList {
 		$ss->next = (($ss->total - $ss->startAt) >= $ss->chunk) ? $ss->current * $ss->chunk : '';
 		$ss->last = (($ss->total - $ss->startAt) >= $ss->chunk) ? ($ss->pages - 1) * $ss->chunk : '';
 		$ss->currentStart = ($ss->current > 1) ? ((($ss->current - 1) * $ss->chunk) + 1) : '1';
-		$ss->currentEnd = ((($ss->current + $ss->chunk) - 1) <= $ss->last) ? ($ss->currentStart + $ss->chunk) - 1 : $ss->total;			
+		$ss->currentEnd = ((($ss->current + $ss->chunk) - 1) <= $ss->last) ? ($ss->currentStart + $ss->chunk) - 1 : $ss->total;
 		$ss->needsPaging = ($ss->total > $ss->chunk) ? true : false;
 		return $ss;
 	}
-	/** 
+	/**
 	 * Sets up a column to sort by
 	 */
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
 		$this->sortByDirection = $direction;
-	} 
+	}
 
-	/** 
+	/**
 	 * Sets up a column to sort by
 	 */
 	public function sortByMultiple() {
 		$args = func_get_args();
 		for ($i = 0; $i < count($args); $i++) {
 			$this->sortByString .= $args[$i];
-			if (($i + 1) < count($args)) { 
+			if (($i + 1) < count($args)) {
 				$this->sortByString .= ', ';
 			}
 		}
@@ -569,7 +569,7 @@ class DatabaseItemListColumnSet {
 		} else {
 			foreach($this->columns as $col) {
 				if ($col->getColumnKey() == $key) {
-					return $col;			
+					return $col;
 				}
 			}
 		}
